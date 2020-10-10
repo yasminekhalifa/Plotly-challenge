@@ -65,14 +65,14 @@
           Plotly.newPlot("bar", data, setLayout);
 
       var trace1 = {
-        x: y_values,
-        y: x_values,
+        x: filteredData.otu_ids,
+        y: filteredData.sample_values,
         mode: 'markers',
-        text: text,
+        text: filteredData.otu_labels,
         marker: {
-          color: [y_values],
+          color: [filteredData.otu_ids],
           opacity: [1, 0.8, 0.6, 0.4],
-          size: x_values
+          size: filteredData.sample_values
         }
       };
       
@@ -80,7 +80,7 @@
       
       var layout = {
         title: 'Marker Size and Color',
-        showlegend: false,
+        showlegend: false
       };
       
       Plotly.newPlot('bubble', data, layout);
