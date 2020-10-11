@@ -1,9 +1,7 @@
     d3.json("./../../samples.json").then(function(data) {
-      console.log(data);
     function populateFilter() {
         var filerOptions = ["All"];
         filerOptions = filerOptions.concat(data.names);
-        console.log(filerOptions);
     
         d3.select("#selDataset")
           .selectAll("option")
@@ -11,8 +9,6 @@
           .enter()
           .append("option")
           .text(d => d);
-        // Bind an event to refresh the data
-        // when an option is selected.
         d3.select("#selDataset").on("change", refreshCharts);
 
       };
@@ -20,18 +16,24 @@
     function filterIds(selectedId) {
       return data.samples.find(s => s.id == selectedId)
 };
+    function filterData(selectedId) {
+      return data.metadata.find(d => d.id == selectedId)
+    };
+    function appendData(mainContainer,data) {
+      mainContainer.innerHTML = "";
+      for (var i = 0; i < Object.keys(data).length; i++) {
+        var div = document.createElement("div");
+        div.innerHTML = Object.keys(data)[i]+": "+Object.values(data)[i]
+        mainContainer.appendChild(div);
+      }
+    }
     function refreshCharts(event) {
-      // event.target will refer tp the selector
-      // from which we will get the selected option
       var selectedValue = d3.select("#selDataset").property('value');
-      console.log(selectedValue);
       var filteredData = filterIds(selectedValue)
-      // With the selectedValue we can refresh the charts
-      // filtering if needed. 
+      var metaData = filterData(selectedValue)
+      var summaryTable = document.getElementById("sample-metadata");
+      appendData(summaryTable, metaData);
 
-      console.log(filteredData);
-    
-      // Use the map method with the arrow function to return all the filtered movie titles.
       var bacterias = []
       for(var i in filteredData.sample_values){
         bacterias.push(
@@ -47,14 +49,12 @@
       let y_values = top_bacteria.map(b => b.id);
       let text = top_bacteria.map(b => b.label);
 
-      console.log(x_values);
-
       var bar = {
-                  x: x_values,     //top 10 values
-                  y: y_values,     // formatted ids
-                  text: text,     //labels
-                  type: "bar", //bar graphs
-                  orientation: "h" //horizontal graphs
+                  x: x_values, 
+                  y: y_values,   
+                  text: text,     
+                  type: "bar", 
+                  orientation: "h" 
           };
           var setLayout = {
                   title: "Bacteria found",
@@ -71,7 +71,6 @@
         text: filteredData.otu_labels,
         marker: {
           color: [filteredData.otu_ids],
-          opacity: [1, 0.8, 0.6, 0.4],
           size: filteredData.sample_values
         }
       };
