@@ -1,4 +1,4 @@
-    d3.json("./../../samples.json").then(function(data) {
+    d3.json("samples.json").then(function(data) {
     function populateFilter() {
         var filerOptions = ["All"];
         filerOptions = filerOptions.concat(data.names);
